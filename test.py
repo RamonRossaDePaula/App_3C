@@ -25,3 +25,31 @@ def vari_semanal(media, media_diaria) :
 
 print(vari_semanal(media, media_diaria))
 print(vari_semanal(media, media_diaria).shape)
+
+
+def plot_graph(df, sujeito, media):
+    media_sujeito = media[0, 0]
+    df = df[sujeito]
+    dias = [[], [], [], [], [], [], []]
+    j = 0
+    for i in df:
+        dias[j].append(i)
+        j += 1
+        if j == 7:
+            j = 0
+
+    segunda = dias[0]
+    y = list(range(len(segunda)))
+
+    print(np.var(segunda))
+    print(np.mean(segunda))
+    print(np.average(segunda))
+    print(media_sujeito)
+
+    # plt.scatter(y, segunda, color='crimson')
+    # plt.hlines(y=media_sujeito, xmin=min(y), xmax=max(y), color='black')
+    # plt.show()
+    # print(media_sujeito)
+    
+
+plot_graph(df_data, df_data.columns[0], media)
