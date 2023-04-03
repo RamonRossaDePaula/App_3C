@@ -11,7 +11,7 @@ def media_por_dia(df:pd.DataFrame):
 
     range_dias = np.array(range(0, len(df.axes[0])+1, 1440))
     media = np.zeros((len(df.axes[1]), 7))
-
+    
     for i in range(0, len(df.axes[1])):
         for j in range(0,7):
             media[i,j] = np.average(df.loc[range(range_dias[j], range_dias[j+1]-1),df.columns[i]])
@@ -25,3 +25,13 @@ def vari_semanal(media:np.array, media_diaria:np.array) :
         for j in range(0,7):
             var[i] += ((media[i] - media_diaria[i, j])**2)/7
     return var
+
+
+if __name__ == "__main__":
+    df_data = pd.read_csv('data/timeseries_NEW.csv')
+    df_groups = pd.read_csv('data/timeseries_classification.csv', index_col=0)
+
+    df_data = df_data.drop(df_data.columns[0], axis=1)
+
+    media = medias(df_data)
+    media_diaria = media_por_dia(df_data)
