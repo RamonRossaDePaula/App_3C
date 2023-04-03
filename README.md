@@ -1,5 +1,5 @@
 # Trabalho final da cadeira de Ciência de Dados
-### por Eric Naiber, Isabela Ackerman, Ramon de Paula
+### por Eric Naiber, Isabela Ackermann, Ramon de Paula
 <br>
 
 ## Download
