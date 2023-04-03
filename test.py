@@ -22,6 +22,3 @@ def vari_semanal(media, media_diaria) :
         for j in range(0,7):
             var[i] += ((media[i] - media_diaria[i, j])**2)/7
     return var
-
-# print(vari_semanal(media, media_diaria))
-# print(vari_semanal(media, media_diaria).shape)
