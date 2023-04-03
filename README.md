@@ -2,6 +2,12 @@
 ### por Eric Naiber, Isabela Ackerman, Ramon de Paula
 <br>
 
+## Download
+Na sua pasta de preferência use
+```
+git clone https://github.com/RicGary/TrabalhoDS.git
+```
+
 ## Estrutura
 ```
 .
