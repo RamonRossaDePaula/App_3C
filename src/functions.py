@@ -16,3 +16,12 @@ def media_por_dia(df:pd.DataFrame):
         for j in range(0,7):
             media[i,j] = np.average(df.loc[range(range_dias[j], range_dias[j+1]-1),df.columns[i]])
     return media
+
+def vari_semanal(media:np.array, media_diaria:np.array) :
+
+    var = np.zeros(len(media))
+    
+    for i in range(0, len(media)):
+        for j in range(0,7):
+            var[i] += ((media[i] - media_diaria[i, j])**2)/7
+    return var
