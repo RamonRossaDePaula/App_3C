@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from math import floor
 
 def medias(df:pd.DataFrame):
     media = np.zeros(len(df.axes[1]))
@@ -48,4 +49,3 @@ if __name__ == "__main__":
     media = medias(df_data)
     media_diaria = media_por_dia(df_data)
 
-    print(maximos_por_sujeito(df_data))
