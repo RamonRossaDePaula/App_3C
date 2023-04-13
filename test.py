@@ -12,12 +12,6 @@ from sklearn.metrics import accuracy_score
 import nltk
 import sklearn
 
-'''
-print('The nltk version is {}.'.format(nltk.__version__))
-print('The scikit-learn version is {}.'.format(sklearn.__version__))
-
-'''
-
 
 
 df_data = pd.read_csv('data/timeseries_NEW.csv')
@@ -79,6 +73,8 @@ print(df_groups.head())
 
 print(df_groups.head())"""
 
+
+#_____________________Naive_Bayes_____________________#
 '''
 #plot = sn.heatmap(corr, annot = True, fmt=".1f", linewidths=.6)
 #plt.show()
@@ -99,6 +95,7 @@ print(gnb.get_params())
 #plt.show()
 '''
 
+#_____________________MLPClassifier_____________________#
 
 X = predictors_df.drop("group", axis=1)
 y = df_groups['Group']
@@ -118,3 +115,6 @@ y_pred = model.predict(X_test)
 # Avaliando a acurácia do modelo
 acc = accuracy_score(y_test, y_pred)
 print("Acurácia:", acc)
+
+#________________________________________________________#
+
