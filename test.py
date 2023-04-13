@@ -14,10 +14,6 @@ from sklearn.metrics import accuracy_score
 from sklearn.inspection import permutation_importance
 from sklearn.feature_selection import mutual_info_classif
 
-#import nltk
-import sklearn
-
-
 
 df_data = pd.read_csv('data/timeseries_NEW.csv')
 df_groups = pd.read_csv('data/timeseries_classification.csv', index_col=0)
