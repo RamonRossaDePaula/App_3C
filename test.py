@@ -8,6 +8,11 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import confusion_matrix
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score
+from sklearn import svm
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.inspection import permutation_importance
+from sklearn.feature_selection import mutual_info_classif
 
 #import nltk
 import sklearn
@@ -25,9 +30,9 @@ df_data = df_data.drop(df_data.columns[0], axis=1)
 media = fc.medias(df_data)
 media_diaria = fc.media_por_dia(df_data)
 
-print(df_data.head())
+# print(df_data.head())
 
-print(df_data.shape)
+# print(df_data.shape)
 def vari_semanal(media, media_diaria) :
 
     var = np.zeros(len(media))
@@ -64,88 +69,134 @@ predictors_df["fourieramp14"]   = fourier_amp[1][:]
 predictors_df["group"]          = df_groups["Group"]
 
 
-print(predictors_df.head())
+# print(predictors_df.head())
 
 corr = predictors_df.corr()
 
-print(df_groups.head())
+# print(df_groups.head())
 """df_groups = df_groups.drop(index='index', axis=0)
 
 print(df_groups.head())"""
 
 
 #_____________________Naive_Bayes_____________________#
-'''
-#plot = sn.heatmap(corr, annot = True, fmt=".1f", linewidths=.6)
-#plt.show()
-X = predictors_df.drop("group", axis=1)
-y = df_groups['Group']
+def NaiveBayers_class():
+    #plot = sn.heatmap(corr, annot = True, fmt=".1f", linewidths=.6)
+    #plt.show()
+    X = predictors_df.drop("group", axis=1)
+    y = df_groups['Group']
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=0)
-gnb = GaussianNB()
-y_pred = gnb.fit(X_train, y_train).predict(X_test)
-print("Number of mislabeled points out of a total %d points : %d"
-       % (X_test.shape[0], (y_test != y_pred).sum()))
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=0)
+    gnb = GaussianNB()
+    y_pred = gnb.fit(X_train, y_train).predict(X_test)
+    print("Number of mislabeled points out of a total %d points : %d"
+        % (X_test.shape[0], (y_test != y_pred).sum()))
 
-print(gnb.score(X_test, y_test))
-print(gnb.get_params())
+    print(gnb.score(X_test, y_test))
+    print(gnb.get_params())
 
 
-#plt.hist(df_groups['Group'], bins=3)
-#plt.show()
-'''
+    #plt.hist(df_groups['Group'], bins=3)
+    #plt.show()
+
+
+    mi_scores = mutual_info_classif(X, y)
+    Y_imp = []
+    X_imp = []
+    for i, feature in enumerate(X.columns):
+        print(f"{feature}: {mi_scores[i]}")
+        X_imp.append(feature)
+        Y_imp.append(mi_scores[i])
+    
+    plt.bar(X_imp, Y_imp)
+    plt.xticks(rotation = 45)
+    plt.title("Naive Bayes \n Feature Importance")
+    plt.show()
+
 
 #_____________________MLPClassifier_____________________#
-'''
-X = predictors_df.drop("group", axis=1)
-y = df_groups['Group']
 
-# Separando os dados em conjuntos de treino e teste
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
+def Mlpc_class():
+    X = predictors_df.drop("group", axis=1)
+    y = df_groups['Group']
 
-# Criando um modelo MLPClassifier com 3 camadas ocultas de 10 neurônios cada
-model = MLPClassifier(hidden_layer_sizes=(10, 10, 10), learning_rate='adaptive', max_iter= 500)
+    # Separando os dados em conjuntos de treino e teste
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
 
-# Treinando o modelo com os dados de treino
-model.fit(X_train, y_train)
+    # Criando um modelo MLPClassifier com 3 camadas ocultas de 10 neurônios cada
+    model = MLPClassifier(hidden_layer_sizes=(10, 10, 10), learning_rate='adaptive', max_iter= 500)
 
-# Fazendo previsões com os dados de teste
-y_pred = model.predict(X_test)
+    # Treinando o modelo com os dados de treino
+    model.fit(X_train, y_train)
 
-# Avaliando a acurácia do modelo
-y_test1 = len(y_test[y_test == 1])
-y_test2 = len(y_test[y_test == 2])
-y_test3 = len(y_test[y_test == 3])
+    # Fazendo previsões com os dados de teste
+    y_pred = model.predict(X_test)
 
-acc = accuracy_score(y_test, y_pred)
-print("Acurácia:", acc)
-conf_mlp = confusion_matrix(y_test, y_pred)
+    # Avaliando a acurácia do modelo
+    y_test1 = len(y_test[y_test == 1])
+    y_test2 = len(y_test[y_test == 2])
+    y_test3 = len(y_test[y_test == 3])
 
-true1, false2_was1, false3_was1, false1_was2, true2, false3_was2, false1_was3, false2_was3, true3 = conf_mlp.ravel()
+    acc = accuracy_score(y_test, y_pred)
+    print("Acurácia:", acc)
+    conf_mlp = confusion_matrix(y_test, y_pred)
 
-print("""Matriz de confusão: 
-""", conf_mlp, """
-Acurácia grupo 1:""", true1/y_test1,"""
-Acurácia grupo 2:""", true2/y_test2,"""
-Acurácia grupo 3:""", true3/y_test3)
-'''
+    true1, false2_was1, false3_was1, false1_was2, true2, false3_was2, false1_was3, false2_was3, true3 = conf_mlp.ravel()
+
+    print("""Matriz de confusão: 
+    """, conf_mlp, """
+    Acurácia grupo 1:""", true1/y_test1,"""
+    Acurácia grupo 2:""", true2/y_test2,"""
+    Acurácia grupo 3:""", true3/y_test3)
+
+    importance = permutation_importance(model, X_test, y_test, n_repeats=10, random_state=42)
+
+    Y_imp = []
+    X_imp = []
+    for i, feature in enumerate(X.columns):
+        print(f"{feature}: {importance.importances_mean[i]}")
+        X_imp.append(feature)
+        Y_imp.append(importance.importances_mean[i])
+
+    plt.bar(X_imp, Y_imp)
+    plt.xticks(rotation = 45)
+    plt.title("MLPClassifier \n Feature Importance")
+    plt.show()
+
 
 #____________________________SVM____________________________#
 
-from sklearn import svm
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
+def Svm_class():
+    X = predictors_df.drop("group", axis=1)
+    y = df_groups['Group']
 
-X = predictors_df.drop("group", axis=1)
-y = df_groups['Group']
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=43)
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=43)
+    clf = svm.SVC(kernel='poly')
+    clf.fit(X_train, y_train)
 
-clf = svm.SVC(kernel='poly')
-clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_test)
 
-y_pred = clf.predict(X_test)
+    accuracy = accuracy_score(y_test, y_pred)
 
-accuracy = accuracy_score(y_test, y_pred)
+    print("Acurácia do modelo: {:.2f}%".format(accuracy * 100))
 
-print("Acurácia do modelo: {:.2f}%".format(accuracy * 100))
+    importance = permutation_importance(clf, X_test, y_test, n_repeats=10, random_state=42)
+    Y_imp = []
+    X_imp = []
+    for i, feature in enumerate(X.columns):
+        print(f"{feature}: {importance.importances_mean[i]}")
+        X_imp.append(feature)
+        Y_imp.append(importance.importances_mean[i])
+
+    plt.bar(X_imp, Y_imp)
+    plt.xticks(rotation = 45)
+    plt.title("SVM \n Feature Importance")
+    plt.show()
+
+
+if __name__ == "__main__":
+    print()
+    Mlpc_class()
+    Svm_class()
+    NaiveBayers_class()
