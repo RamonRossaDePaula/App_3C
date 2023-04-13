@@ -96,7 +96,7 @@ print(gnb.get_params())
 '''
 
 #_____________________MLPClassifier_____________________#
-
+'''
 X = predictors_df.drop("group", axis=1)
 y = df_groups['Group']
 
@@ -128,6 +128,24 @@ print("""Matriz de confusão:
 Acurácia grupo 1:""", true1/y_test1,"""
 Acurácia grupo 2:""", true2/y_test2,"""
 Acurácia grupo 3:""", true3/y_test3)
+'''
 
-#________________________________________________________#
+#____________________________SVM____________________________#
 
+from sklearn import svm
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+X = predictors_df.drop("group", axis=1)
+y = df_groups['Group']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=43)
+
+clf = svm.SVC(kernel='poly')
+clf.fit(X_train, y_train)
+
+y_pred = clf.predict(X_test)
+
+accuracy = accuracy_score(y_test, y_pred)
+
+print("Acurácia do modelo: {:.2f}%".format(accuracy * 100))
