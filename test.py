@@ -6,6 +6,19 @@ import src.functions as fc
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import confusion_matrix
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import accuracy_score
+
+import nltk
+import sklearn
+
+'''
+print('The nltk version is {}.'.format(nltk.__version__))
+print('The scikit-learn version is {}.'.format(sklearn.__version__))
+
+'''
+
+
 
 df_data = pd.read_csv('data/timeseries_NEW.csv')
 df_groups = pd.read_csv('data/timeseries_classification.csv', index_col=0)
@@ -66,6 +79,7 @@ print(df_groups.head())
 
 print(df_groups.head())"""
 
+'''
 #plot = sn.heatmap(corr, annot = True, fmt=".1f", linewidths=.6)
 #plt.show()
 X = predictors_df.drop("group", axis=1)
@@ -83,3 +97,24 @@ print(gnb.get_params())
 
 #plt.hist(df_groups['Group'], bins=3)
 #plt.show()
+'''
+
+
+X = predictors_df.drop("group", axis=1)
+y = df_groups['Group']
+
+# Separando os dados em conjuntos de treino e teste
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+# Criando um modelo MLPClassifier com 3 camadas ocultas de 10 neurônios cada
+model = MLPClassifier(hidden_layer_sizes=(10, 10, 10))
+
+# Treinando o modelo com os dados de treino
+model.fit(X_train, y_train)
+
+# Fazendo previsões com os dados de teste
+y_pred = model.predict(X_test)
+
+# Avaliando a acurácia do modelo
+acc = accuracy_score(y_test, y_pred)
+print("Acurácia:", acc)
