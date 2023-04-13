@@ -9,7 +9,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score
 
-import nltk
+#import nltk
 import sklearn
 
 
@@ -101,10 +101,10 @@ X = predictors_df.drop("group", axis=1)
 y = df_groups['Group']
 
 # Separando os dados em conjuntos de treino e teste
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
 
 # Criando um modelo MLPClassifier com 3 camadas ocultas de 10 neurônios cada
-model = MLPClassifier(hidden_layer_sizes=(10, 10, 10))
+model = MLPClassifier(hidden_layer_sizes=(10, 10, 10), learning_rate='adaptive', max_iter= 500)
 
 # Treinando o modelo com os dados de treino
 model.fit(X_train, y_train)
@@ -113,8 +113,21 @@ model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
 
 # Avaliando a acurácia do modelo
+y_test1 = len(y_test[y_test == 1])
+y_test2 = len(y_test[y_test == 2])
+y_test3 = len(y_test[y_test == 3])
+
 acc = accuracy_score(y_test, y_pred)
 print("Acurácia:", acc)
+conf_mlp = confusion_matrix(y_test, y_pred)
+
+true1, false2_was1, false3_was1, false1_was2, true2, false3_was2, false1_was3, false2_was3, true3 = conf_mlp.ravel()
+
+print("""Matriz de confusão: 
+""", conf_mlp, """
+Acurácia grupo 1:""", true1/y_test1,"""
+Acurácia grupo 2:""", true2/y_test2,"""
+Acurácia grupo 3:""", true3/y_test3)
 
 #________________________________________________________#
 
