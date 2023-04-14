@@ -117,7 +117,7 @@ def Mlpc_class():
     y = df_groups['Group']
 
     # Separando os dados em conjuntos de treino e teste
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
 
     # Criando um modelo MLPClassifier com 3 camadas ocultas de 10 neurônios cada
     model = MLPClassifier(hidden_layer_sizes=(10, 10, 10), learning_rate='adaptive', max_iter= 500)
